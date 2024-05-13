@@ -4,8 +4,8 @@ import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.118/examples/js
 import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js';
 
 let camera, scene, renderer, clock;
-let mixer;
-const animations = [];
+let staticMixer, animationMixer;
+let staticModel, animatedModel;
 let controls;
 
 function init() {
@@ -30,41 +30,51 @@ function init() {
     directionalLight.position.set(1, 1, 0);
     scene.add(directionalLight);
 
-    loadAnimatedModelAndAnimations();
+    loadStaticModel();
+    loadAnimatedModel();
     setupAnimationControls();
     animate();
 }
 
-function loadAnimatedModelAndAnimations() {
+function loadStaticModel() {
     const loader = new GLTFLoader();
     loader.load('models/StaticModel.gltf', (gltf) => {
-        scene.add(gltf.scene);
-        mixer = new THREE.AnimationMixer(gltf.scene);
+        staticModel = gltf.scene;
+        staticModel.visible = false; // Start with the static model hidden
+        scene.add(staticModel);
+    }, undefined, loadModelFailed);
+}
+
+function loadAnimatedModel() {
+    const loader = new GLTFLoader();
+    loader.load('models/Animations.gltf', (gltf) => {
+        animatedModel = gltf.scene;
+        animatedModel.visible = false; // Start with the animated model hidden
+        animationMixer = new THREE.AnimationMixer(animatedModel);
         gltf.animations.forEach((anim) => {
-            const action = mixer.clipAction(anim);
-            animations.push(action);
+            const action = animationMixer.clipAction(anim);
+            action.play(); // Play all animations
         });
-        // Optionally play the first "static" animation automatically
-        animations[0].play(); // Assuming the first loaded animation is the static model display
+        scene.add(animatedModel);
     }, undefined, loadModelFailed);
 }
 
 function setupAnimationControls() {
-    const buttons = document.querySelectorAll('#animation-controls button');
-    buttons.forEach(button => {
-        button.addEventListener('click', (event) => {
-            event.preventDefault();
-            const index = parseInt(button.getAttribute('data-animation'), 10);
-            playAnimation(index);
-        });
+    document.getElementById('staticButton').addEventListener('click', () => {
+        if (staticModel) {
+            staticModel.visible = true;
+        }
+        if (animatedModel) {
+            animatedModel.visible = false;
+        }
     });
-}
 
-function playAnimation(index) {
-    animations.forEach((anim, i) => {
-        anim.stop(); // Stop all animations
-        if (i === index) {
-            anim.play(); // Play the selected animation
+    document.getElementById('animationButton').addEventListener('click', () => {
+        if (animatedModel) {
+            animatedModel.visible = true;
+        }
+        if (staticModel) {
+            staticModel.visible = false;
         }
     });
 }
@@ -72,7 +82,7 @@ function playAnimation(index) {
 function animate() {
     requestAnimationFrame(animate);
     const delta = clock.getDelta();
-    if (mixer) mixer.update(delta);
+    if (animationMixer && animatedModel.visible) animationMixer.update(delta);
     controls.update();
     renderer.render(scene, camera);
 }
@@ -90,4 +100,3 @@ window.addEventListener('resize', () => {
 });
 
 init();
-
