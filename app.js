@@ -31,6 +31,8 @@ function init() {
     scene.add(directionalLight);
 
     loadAnimatedModelAndAnimations();
+    setupAnimationControls();
+    animate();
 }
 
 function loadAnimatedModelAndAnimations() {
@@ -38,20 +40,18 @@ function loadAnimatedModelAndAnimations() {
     loader.load('models/StaticModel.gltf', (gltf) => {
         scene.add(gltf.scene);
         mixer = new THREE.AnimationMixer(gltf.scene);
-        
         gltf.animations.forEach((anim) => {
             const action = mixer.clipAction(anim);
-            animations.push(action); // Store the action to use later
+            animations.push(action);
         });
-    }, undefined, (error) => {
-        console.error('Error loading the model:', error);
-    });
+    }, undefined, loadModelFailed);
 }
 
 function setupAnimationControls() {
     const buttons = document.querySelectorAll('#animation-controls button');
     buttons.forEach(button => {
-        button.addEventListener('click', () => {
+        button.addEventListener('click', (event) => {
+            event.preventDefault();
             const index = parseInt(button.getAttribute('data-animation'), 10);
             playAnimation(index);
         });
@@ -62,20 +62,21 @@ function playAnimation(index) {
     animations.forEach((anim, i) => {
         const isActive = i === index;
         anim.stop();
-        if (isActive) {
-            anim.play();
-        }
+        if (isActive) anim.play();
     });
 }
 
 function animate() {
     requestAnimationFrame(animate);
-
     const delta = clock.getDelta();
     if (mixer) mixer.update(delta);
     controls.update();
-
     renderer.render(scene, camera);
+}
+
+function loadModelFailed(error) {
+    console.error("Failed to load model: ", error);
+    alert('Failed to load the model, please check the console for more information.');
 }
 
 window.addEventListener('resize', () => {
@@ -86,5 +87,3 @@ window.addEventListener('resize', () => {
 });
 
 init();
-animate();
-setupAnimationControls();
