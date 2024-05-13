@@ -37,12 +37,15 @@ function init() {
 
 function loadAnimatedModelAndAnimations() {
     const loader = new GLTFLoader();
-    loader.load('models/StaticModel.gltf', (gltf) => {
+    loader.load('models/Animations.gltf', (gltf) => {
         scene.add(gltf.scene);
         mixer = new THREE.AnimationMixer(gltf.scene);
-        gltf.animations.forEach((anim) => {
+        gltf.animations.forEach((anim, index) => {
             const action = mixer.clipAction(anim);
             animations.push(action);
+            if (index === 0) { // Automatically play the first animation
+                action.play();
+            }
         });
     }, undefined, loadModelFailed);
 }
@@ -87,3 +90,4 @@ window.addEventListener('resize', () => {
 });
 
 init();
+
