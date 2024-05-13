@@ -17,7 +17,7 @@ function init() {
 
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setClearColor(new THREE.Color('grey'));  // Set renderer background color to grey
+    renderer.setClearColor(new THREE.Color('grey')); // Set renderer background color to grey
     document.body.appendChild(renderer.domElement);
 
     controls = new OrbitControls(camera, renderer.domElement);
@@ -25,17 +25,17 @@ function init() {
     controls.dampingFactor = 0.1;
 
     setupLighting();
-
     loadStaticModel();
     loadAnimationModel();
 
-    // Setup the event listener for the play button within the init function
     document.getElementById('playButton').addEventListener('click', () => {
         animations.forEach((anim) => {
-            anim.stop();  // Stop all animations
-            anim.play();  // Replay all animations (for simplicity in this example)
+            anim.reset();
+            anim.play();
         });
     });
+
+    animate();
 }
 
 function setupLighting() {
@@ -52,7 +52,7 @@ function loadStaticModel() {
     loader.load('models/StaticModel.gltf', (gltf) => {
         scene.add(gltf.scene);
         console.log('Static model loaded.');
-    }, undefined, function (error) {
+    }, undefined, (error) => {
         console.error('Error loading the static model:', error);
     });
 }
@@ -60,37 +60,33 @@ function loadStaticModel() {
 function loadAnimationModel() {
     const loader = new GLTFLoader();
     loader.load('models/Animations.gltf', (gltf) => {
-        mixer = new THREE.AnimationMixer(gltf.scene); // Assuming the static model needs to be animated
+        mixer = new THREE.AnimationMixer(gltf.scene);
         gltf.animations.forEach((clip) => {
             const action = mixer.clipAction(clip);
-            animations.push(action); // Store the action for use later
+            animations.push(action);
         });
         console.log('Animation file loaded and mixer initialized.');
-    }, undefined, function (error) {
+    }, undefined, (error) => {
         console.error('Error loading the animation file:', error);
     });
 }
 
 function animate() {
     requestAnimationFrame(animate);
-    const delta = clock.getDelta(); // Ensure clock is properly initialized and used
 
+    const delta = clock.getDelta();
     if (mixer) {
-        mixer.update(delta); // This updates the mixer to progress the animation
+        mixer.update(delta);
     }
 
     controls.update();
     renderer.render(scene, camera);
 }
 
-
 window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
-    controls.update();
 });
 
 init();
-animate();
-
