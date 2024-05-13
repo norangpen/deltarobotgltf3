@@ -73,16 +73,16 @@ function loadAnimationModel() {
 
 function animate() {
     requestAnimationFrame(animate);
+    const delta = clock.getDelta(); // Ensure clock is properly initialized and used
 
-    const delta = clock.getDelta();
     if (mixer) {
-        mixer.update(delta);
+        mixer.update(delta); // This updates the mixer to progress the animation
     }
 
-    controls.update();  // Only required if controls.enableDamping or controls.autoRotate are set to true
-
+    controls.update();
     renderer.render(scene, camera);
 }
+
 
 window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
