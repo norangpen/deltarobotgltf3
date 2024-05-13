@@ -1,35 +1,32 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GLTF Model Viewer</title>
+    <title>Animation Control</title>
     <style>
         body {
             margin: 0;
-            overflow: hidden;
         }
-
-        canvas {
-            display: block;
-            width: 100%;
-            height: 100%;
+        #animation-controls {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            z-index: 100;
         }
-
-        #playButton {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 10;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
+        #animation-controls button {
+            margin: 5px;
         }
     </style>
 </head>
 <body>
-    <button id="playButton">Play Animation</button>
+    <div id="animation-controls">
+        <button data-animation="0">Static</button>
+        <button data-animation="1">Animations</button>
+    </div>
+
+    <!-- Your custom script -->
     <script type="module" src="app.js"></script>
 </body>
 </html>
+
 
