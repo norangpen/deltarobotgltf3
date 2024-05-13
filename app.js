@@ -12,62 +12,59 @@ function init() {
     scene = new THREE.Scene();
     clock = new THREE.Clock();
 
-    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 2000);
-    camera.position.set(100, 50, 200);
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(2, 2, 5);
 
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setClearColor(new THREE.Color('grey')); // Set renderer background color to grey
     document.body.appendChild(renderer.domElement);
 
     controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true; // Optional, but for a smoother control experience
-    controls.dampingFactor = 0.1;
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
 
-    setupLighting();
-    loadStaticModel();
-    loadAnimationModel();
-
-    document.getElementById('playButton').addEventListener('click', () => {
-        animations.forEach((anim) => {
-            anim.reset();
-            anim.play();
-        });
-    });
-
-    animate();
-}
-
-function setupLighting() {
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    const ambientLight = new THREE.AmbientLight(0xcccccc, 0.4);
     scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.2);
-    directionalLight.position.set(-300, 150, 300);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    directionalLight.position.set(1, 1, 0);
     scene.add(directionalLight);
+
+    loadAnimatedModelAndAnimations();
 }
 
-function loadStaticModel() {
+function loadAnimatedModelAndAnimations() {
     const loader = new GLTFLoader();
     loader.load('models/StaticModel.gltf', (gltf) => {
         scene.add(gltf.scene);
-        console.log('Static model loaded.');
+        mixer = new THREE.AnimationMixer(gltf.scene);
+        
+        gltf.animations.forEach((anim) => {
+            const action = mixer.clipAction(anim);
+            animations.push(action); // Store the action to use later
+        });
     }, undefined, (error) => {
-        console.error('Error loading the static model:', error);
+        console.error('Error loading the model:', error);
     });
 }
 
-function loadAnimationModel() {
-    const loader = new GLTFLoader();
-    loader.load('models/Animations.gltf', (gltf) => {
-        mixer = new THREE.AnimationMixer(gltf.scene);
-        gltf.animations.forEach((clip) => {
-            const action = mixer.clipAction(clip);
-            animations.push(action);
+function setupAnimationControls() {
+    const buttons = document.querySelectorAll('#animation-controls button');
+    buttons.forEach(button => {
+        button.addEventListener('click', () => {
+            const index = parseInt(button.getAttribute('data-animation'), 10);
+            playAnimation(index);
         });
-        console.log('Animation file loaded and mixer initialized.');
-    }, undefined, (error) => {
-        console.error('Error loading the animation file:', error);
+    });
+}
+
+function playAnimation(index) {
+    animations.forEach((anim, i) => {
+        const isActive = i === index;
+        anim.stop();
+        if (isActive) {
+            anim.play();
+        }
     });
 }
 
@@ -75,11 +72,9 @@ function animate() {
     requestAnimationFrame(animate);
 
     const delta = clock.getDelta();
-    if (mixer) {
-        mixer.update(delta);
-    }
-
+    if (mixer) mixer.update(delta);
     controls.update();
+
     renderer.render(scene, camera);
 }
 
@@ -87,6 +82,9 @@ window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
+    controls.update();
 });
 
 init();
+animate();
+setupAnimationControls();
