@@ -37,7 +37,7 @@ function init() {
 
 function loadAnimatedModelAndAnimations() {
     const loader = new GLTFLoader();
-    loader.load('models/Animations.gltf', (gltf) => {
+    loader.load('models/StaticModel.gltf', (gltf) => {
         scene.add(gltf.scene);
         mixer = new THREE.AnimationMixer(gltf.scene);
         gltf.animations.forEach((anim) => {
