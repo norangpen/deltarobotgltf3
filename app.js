@@ -40,13 +40,12 @@ function loadAnimatedModelAndAnimations() {
     loader.load('models/Animations.gltf', (gltf) => {
         scene.add(gltf.scene);
         mixer = new THREE.AnimationMixer(gltf.scene);
-        gltf.animations.forEach((anim, index) => {
+        gltf.animations.forEach((anim) => {
             const action = mixer.clipAction(anim);
             animations.push(action);
-            if (index === 0) { // Automatically play the first animation
-                action.play();
-            }
         });
+        // Optionally play the first "static" animation automatically
+        animations[0].play(); // Assuming the first loaded animation is the static model display
     }, undefined, loadModelFailed);
 }
 
@@ -63,9 +62,10 @@ function setupAnimationControls() {
 
 function playAnimation(index) {
     animations.forEach((anim, i) => {
-        const isActive = i === index;
-        anim.stop();
-        if (isActive) anim.play();
+        anim.stop(); // Stop all animations
+        if (i === index) {
+            anim.play(); // Play the selected animation
+        }
     });
 }
 
