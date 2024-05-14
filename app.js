@@ -60,16 +60,15 @@ function createGradientBackground() {
         }
     `;
 
-    const geometry = new THREE.PlaneGeometry(100, 100);
+    const geometry = new THREE.SphereGeometry(100, 32, 32);
     const material = new THREE.ShaderMaterial({
         vertexShader: vertexShader,
         fragmentShader: fragmentShader,
-        side: THREE.DoubleSide,
+        side: THREE.BackSide, // Render the inside of the sphere
     });
 
-    const plane = new THREE.Mesh(geometry, material);
-    plane.position.z = -10;
-    scene.add(plane);
+    const sphere = new THREE.Mesh(geometry, material);
+    scene.add(sphere);
 }
 
 function loadStaticModel() {
@@ -137,3 +136,4 @@ window.addEventListener('resize', () => {
 });
 
 init();
+
