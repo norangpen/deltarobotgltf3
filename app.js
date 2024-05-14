@@ -1,4 +1,3 @@
-// Import necessary modules from Three.js
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.118/build/three.module.js';
 import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js';
@@ -29,6 +28,15 @@ function init() {
     const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
     directionalLight.position.set(1, 1, 0);
     scene.add(directionalLight);
+
+    // Load Skybox
+    const loader = new THREE.CubeTextureLoader();
+    const texture = loader.load([
+        'textures/skybox/px.jpg', 'textures/skybox/nx.jpg',
+        'textures/skybox/py.jpg', 'textures/skybox/ny.jpg',
+        'textures/skybox/pz.jpg', 'textures/skybox/nz.jpg'
+    ]);
+    scene.background = texture;
 
     loadStaticModel();
     loadAnimatedModel();
@@ -101,4 +109,3 @@ window.addEventListener('resize', () => {
 });
 
 init();
-
