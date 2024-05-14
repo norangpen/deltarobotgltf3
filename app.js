@@ -76,14 +76,15 @@ function createGradientBackground() {
 // Perlin Noise Function
 function generatePerlinNoise(width, height, scale) {
     const size = width * height;
-    const data = new Float32Array(size);
+    const data = new Uint8Array(size); // Change to Uint8Array for texture
     const perlin = new Perlin();
     let quality = 1;
+    let z = Math.random() * 100;
     for (let j = 0; j < 4; j++) {
         for (let i = 0; i < size; i++) {
             const x = i % width;
-            const y = ~~(i / width);
-            data[i] += perlin.noise(x / quality, y / quality, 0) * quality;
+            const y = Math.floor(i / width);
+            data[i] += Math.abs(perlin.noise(x / quality, y / quality, z)) * 128 * quality;
         }
         quality *= 5;
     }
