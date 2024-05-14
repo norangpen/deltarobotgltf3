@@ -35,6 +35,8 @@ function init() {
 
     createGradientBackground(); // Add gradient background
 
+    createGround(); // Add ground
+
     loadStaticModel();
     loadAnimatedModel();
     setupAnimationControls();
@@ -69,6 +71,16 @@ function createGradientBackground() {
 
     const sphere = new THREE.Mesh(geometry, material);
     scene.add(sphere);
+}
+
+function createGround() {
+    const groundGeometry = new THREE.PlaneGeometry(100, 100);
+    const groundMaterial = new THREE.MeshStandardMaterial({ color: 0x808080, roughness: 1 });
+    const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+    ground.rotation.x = -Math.PI / 2; // Rotate the plane to be horizontal
+    ground.position.y = -1; // Position the ground slightly below the models
+    ground.receiveShadow = true; // Enable shadows on the ground
+    scene.add(ground);
 }
 
 function loadStaticModel() {
