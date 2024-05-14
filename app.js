@@ -26,7 +26,7 @@ function init() {
     scene.add(ambientLight);
 
     const directionalLight1 = new THREE.DirectionalLight(0xffffff, 1.0);
-    directionalLight1.position.set(0, 1, 0).normalize(); // Move the sun to shine from above
+    directionalLight1.position.set(0, -1, 0).normalize(); // Move the sun to shine from above
     scene.add(directionalLight1);
 
     const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.5);
@@ -75,7 +75,7 @@ function createGradientBackground() {
 
 function createGround() {
     const groundGeometry = new THREE.PlaneGeometry(100, 100);
-    const groundMaterial = new THREE.MeshStandardMaterial({ color: 0x808080, roughness: 1 });
+    const groundMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513, roughness: 1 });
     const ground = new THREE.Mesh(groundGeometry, groundMaterial);
     ground.rotation.x = -Math.PI / 2; // Rotate the plane to be horizontal
     ground.position.y = -1; // Position the ground slightly below the models
