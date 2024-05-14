@@ -26,11 +26,11 @@ function init() {
     scene.add(ambientLight);
 
     const directionalLight1 = new THREE.DirectionalLight(0xffffff, 1.0);
-    directionalLight1.position.set(1, 1, 1).normalize();
+    directionalLight1.position.set(-1, -1, -1).normalize(); // Move the sun to the opposite direction
     scene.add(directionalLight1);
 
     const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.5);
-    directionalLight2.position.set(-1, -1, -1).normalize();
+    directionalLight2.position.set(1, 1, 1).normalize(); // Move the fill light to the opposite direction
     scene.add(directionalLight2);
 
     createGradientBackground(); // Add gradient background
