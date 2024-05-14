@@ -61,28 +61,29 @@ function loadAnimatedModel() {
 
 function setupAnimationControls() {
     document.getElementById('staticButton').addEventListener('click', () => {
-        if (staticModel) {
-            staticModel.visible = true;
-        }
-        if (animatedModel) {
-            animatedModel.visible = false;
-        }
+        toggleModels(true);
     });
 
     document.getElementById('animationButton').addEventListener('click', () => {
-        if (animatedModel) {
-            animatedModel.visible = true;
-        }
-        if (staticModel) {
-            staticModel.visible = false;
-        }
+        toggleModels(false);
     });
+}
+
+function toggleModels(showStatic) {
+    if (staticModel) {
+        staticModel.visible = showStatic;
+    }
+    if (animatedModel) {
+        animatedModel.visible = !showStatic;
+    }
 }
 
 function animate() {
     requestAnimationFrame(animate);
     const delta = clock.getDelta();
-    if (animationMixer && animatedModel.visible) animationMixer.update(delta);
+    if (animationMixer && animatedModel && animatedModel.visible) {
+        animationMixer.update(delta);
+    }
     controls.update();
     renderer.render(scene, camera);
 }
@@ -100,3 +101,4 @@ window.addEventListener('resize', () => {
 });
 
 init();
+
