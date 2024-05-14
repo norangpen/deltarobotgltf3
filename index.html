@@ -9,40 +9,45 @@
             overflow: hidden;
             background: linear-gradient(to bottom, #2c3e50, #bdc3c7); /* Gradient background */
             font-family: 'Arial', sans-serif; /* Modern font */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            height: 100vh;
         }
         #animation-controls {
             position: absolute;
-            bottom: 10px;
+            bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            z-index: 100;
+            display: flex;
+            gap: 10px;
         }
         #animation-controls button {
-            margin: 5px;
-            cursor: pointer;
-            padding: 10px 20px;
+            padding: 12px 24px;
             border: none;
-            border-radius: 20px; /* Rounded corners */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Button shadow */
-            background-color: #3498db;
+            border-radius: 25px; /* Rounded corners */
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3); /* Button shadow */
+            background: linear-gradient(145deg, #3498db, #2980b9); /* Button gradient */
             color: #fff;
             font-size: 16px;
-            transition: background-color 0.3s, transform 0.3s; /* Smooth transitions */
+            font-weight: bold;
+            transition: background 0.3s, transform 0.3s, box-shadow 0.3s; /* Smooth transitions */
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Text shadow */
         }
         #animation-controls button:hover {
-            background-color: #2980b9;
+            background: linear-gradient(145deg, #2980b9, #3498db); /* Hover effect */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); /* Hover shadow */
         }
         #animation-controls button:active {
-            background-color: #1a5984;
-            transform: translateY(2px); /* Pressed effect */
+            transform: translateY(4px); /* Pressed effect */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Pressed shadow */
         }
         @media (max-width: 600px) {
             #animation-controls {
-                bottom: 20px;
+                bottom: 30px;
             }
             #animation-controls button {
-                padding: 8px 16px;
+                padding: 10px 20px;
                 font-size: 14px;
             }
         }
