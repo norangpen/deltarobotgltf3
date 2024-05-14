@@ -75,7 +75,7 @@ function createGradientBackground() {
 
 function createGround() {
     const groundGeometry = new THREE.PlaneGeometry(100, 100);
-    const groundMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513, roughness: 1 });
+    const groundMaterial = new THREE.MeshStandardMaterial({ color: 0x404040, roughness: 1 });
     const ground = new THREE.Mesh(groundGeometry, groundMaterial);
     ground.rotation.x = -Math.PI / 2; // Rotate the plane to be horizontal
     ground.position.y = -1; // Position the ground slightly below the models
