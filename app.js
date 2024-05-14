@@ -22,26 +22,54 @@ function init() {
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
 
-    const ambientLight = new THREE.AmbientLight(0xcccccc, 0.4);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6); // Increase intensity
     scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    directionalLight.position.set(1, 1, 0);
-    scene.add(directionalLight);
+    const directionalLight1 = new THREE.DirectionalLight(0xffffff, 1.0);
+    directionalLight1.position.set(1, 1, 1).normalize();
+    scene.add(directionalLight1);
 
-    // Load Skybox
-    const loader = new THREE.CubeTextureLoader();
-    const texture = loader.load([
-        'textures/skybox/px.jpg', 'textures/skybox/nx.jpg',
-        'textures/skybox/py.jpg', 'textures/skybox/ny.jpg',
-        'textures/skybox/pz.jpg', 'textures/skybox/nz.jpg'
-    ]);
-    scene.background = texture;
+    const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.5);
+    directionalLight2.position.set(-1, -1, -1).normalize();
+    scene.add(directionalLight2);
+
+    createGradientBackground(); // Add gradient background
 
     loadStaticModel();
     loadAnimatedModel();
     setupAnimationControls();
     animate();
+}
+
+function createGradientBackground() {
+    const vertexShader = `
+        varying vec2 vUv;
+        void main() {
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+    `;
+
+    const fragmentShader = `
+        varying vec2 vUv;
+        void main() {
+            vec3 topColor = vec3(0.5, 0.7, 1.0);
+            vec3 bottomColor = vec3(1.0, 1.0, 1.0);
+            vec3 color = mix(bottomColor, topColor, vUv.y);
+            gl_FragColor = vec4(color, 1.0);
+        }
+    `;
+
+    const geometry = new THREE.PlaneGeometry(100, 100);
+    const material = new THREE.ShaderMaterial({
+        vertexShader: vertexShader,
+        fragmentShader: fragmentShader,
+        side: THREE.DoubleSide,
+    });
+
+    const plane = new THREE.Mesh(geometry, material);
+    plane.position.z = -10;
+    scene.add(plane);
 }
 
 function loadStaticModel() {
