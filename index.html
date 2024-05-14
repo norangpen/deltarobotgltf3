@@ -7,43 +7,53 @@
         body {
             margin: 0;
             overflow: hidden;
-            background: #1f4037;
-            color: #fff;
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-end;
-            height: 100vh;
+            background: linear-gradient(to bottom, #2c3e50, #bdc3c7); /* Gradient background */
+            font-family: 'Arial', sans-serif; /* Modern font */
         }
         #animation-controls {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
         }
         #animation-controls button {
+            margin: 5px;
             cursor: pointer;
-            padding: 12px 24px;
+            padding: 10px 20px;
             border: none;
-            border-radius: 5px;
-            background-color: #ff7e5f;
+            border-radius: 20px; /* Rounded corners */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Button shadow */
+            background-color: #3498db;
             color: #fff;
             font-size: 16px;
-            font-weight: bold;
-            transition: background 0.3s;
+            transition: background-color 0.3s, transform 0.3s; /* Smooth transitions */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Text shadow */
         }
         #animation-controls button:hover {
-            background-color: #feb47b;
+            background-color: #2980b9;
+        }
+        #animation-controls button:active {
+            background-color: #1a5984;
+            transform: translateY(2px); /* Pressed effect */
+        }
+        @media (max-width: 600px) {
+            #animation-controls {
+                bottom: 20px;
+            }
+            #animation-controls button {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
         }
     </style>
 </head>
 <body>
     <div id="animation-controls">
-        <button id="staticButton">Static</button>
-        <button id="animationButton">Animation</button>
+        <button id="staticButton" aria-label="Show static model">Static</button>
+        <button id="animationButton" aria-label="Show animations">Animation</button>
     </div>
 
     <script type="module" src="app.js"></script>
 </body>
 </html>
-
